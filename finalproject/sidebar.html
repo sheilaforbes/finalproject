@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sidebar Categories</title>
+    <link rel="stylesheet" href="sidebar.css">
+</head>
+<body>
+
+<div class="sidebar">
+
+    <h2>Search</h2>
+    <input type="text" id="searchBar" placeholder="Search categories..." onkeyup="filterCategories()">
+
+    <h2>Categories</h2>
+
+    <div class="category">
+        <button class="cat-toggle">Coffee Shops</button>
+        <div class="cat-content">
+            <a href="#">Tatte Bakery and Cafe</a>
+            <a href="#">Daily Provisions</a>
+            <a href="#">Blank Street</a>
+            <a href="#">Life Alive Organic Cafe</a>
+            <a href="#">Flour Bakery and Cafe</a>
+            <a href="#">Cafe Gato Rojo</a>
+            <a href="#">Clover Cafe</a>
+
+        </div>
+    </div>
+
+    <div class="category">
+        <button class="cat-toggle">Restaurants</button>
+        <div class="cat-content">
+            <a href="#">USA</a>
+            <a href="#">Canada</a>
+            <a href="#">Mexico</a>
+        </div>
+    </div>
+
+    <div class="category">
+        <button class="cat-toggle">Study Spots</button>
+        <div class="cat-content">
+            <a href="#">Cabot Library</a>
+            <a href="#">Widner Library</a>
+            <a href="#">Lamont Library</a>
+            <a href="#">Smith Campus Center</a>
+            <a href="#">Science and Engieering Complex (SEC)</a>
+            <a href="#">Kennedy School Library</a>
+        </div>
+    </div>
+
+    <div class="category">
+        <button class="cat-toggle">Gyms</button>
+        <div class="cat-content">
+            <a href="#">Soccer</a>
+            <a href="#">Basketball</a>
+            <a href="#">Tennis</a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Expandable categories
+    document.querySelectorAll(".cat-toggle").forEach(btn => {
+        btn.addEventListener("click", () => {
+            btn.nextElementSibling.classList.toggle("open");
+        });
+    });
+
+    // Search filter
+    function filterCategories() {
+        const value = document.getElementById("searchBar").value.toLowerCase();
+        const cats = document.querySelectorAll(".category");
+
+        cats.forEach(cat => {
+            const title = cat.querySelector(".cat-toggle").innerText.toLowerCase();
+            cat.style.display = title.includes(value) ? "block" : "none";
+        });
+    }
+</script>
+
+</body>
+</html>
