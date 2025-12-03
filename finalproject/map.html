@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Interactive Map</title>
+    <link rel="stylesheet" href="map.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+    // Initialize map
+    const map = L.map("map").setView([40.7128, -74.0060], 10);
+
+    // Add tiles
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 20,
+    }).addTo(map);
+
+    // Location data (add more here!)
+    const locations = [
+        { name: "Location A", coords: [40.7128, -74.0060], url: "a.html" },
+        { name: "Location B", coords: [40.730610, -73.935242], url: "b.html" }
+    ];
+
+    // Add markers
+    locations.forEach(loc => {
+        L.marker(loc.coords)
+            .addTo(map)
+            .bindPopup(`<b>${loc.name}</b><br><a href="${loc.url}">More info</a>`);
+    });
+
+    // SEARCH + ZOOM
+    function searchLocation() {
+        const input = document.getElementById("search").value.toLowerCase();
+        const found = locations.find(l => l.name.toLowerCase().includes(input));
+
+        if (found) {
+            map.flyTo(found.coords, 14);
+        }
+    }
+</script>
+
+<!-- Search Bar -->
+<div class="search-box">
+    <input id="search" type="text" placeholder="Search location...">
+    <button onclick="searchLocation()">Go</button>
+</div>
+
+</body>
+</html>
+
