@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head> 
+    <meta charset="UTF-8">
+    <title>Harvard Campus Guide</title>
+
+    <!-- CSS for the whole site -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script
+</head>
+<body class="layout-with-sidebar">
+
+    <!--  SIDEBAR  -->
+    <div class="sidebar">
+
+        <h2>Search</h2>
+        <input type="text" id="searchBar" placeholder="Search categories..." onkeyup="filterCategories()">
+
+        <h2>Categories</h2>
+
+        <!-- Coffee Shops -->
+        <div class="category">
+            <button class="cat-toggle">Coffee Shops</button>
+            <div class="cat-content">
+                <a href="#" class="place-link" data-name="Tatte Bakery & Cafe">Tatte Bakery and Cafe</a>
+                <a href="#" class="place-link" data-name="Daily Provisions">Daily Provisions</a>
+                <a href="#" class="place-link" data-name="Blank Street Coffee">Blank Street</a>
+                <a href="#" class="place-link" data-name="Life Alive Organic Cafe">Life Alive Organic Cafe</a>
+                <a href="#" class="place-link" data-name="Flour Bakery & Cafe">Flour Bakery and Cafe</a>
+                <a href="#" class="place-link" data-name="Cafe Gato Rojo">Cafe Gato Rojo</a>
+                <a href="#" class="place-link" data-name="Clover Food Lab">Clover Cafe</a>
+            </div>
+        </div>
+
+        <!-- Restaurants -->
+        <div class="category">
+            <button class="cat-toggle">Restaurants</button>
+            <div class="cat-content">
+                <a href="#" class="place-link" data-name="Russell House Tavern">Russel House Tavern</a>
+                <a href="#" class="place-link" data-name="Grafton Street Pub & Grill">Grafton Street Pub & Grill</a>
+                <a href="#" class="place-link" data-name="Felipe's Taqueria">Felipe's Taqueria</a>
+                <a href="#" class="place-link" data-name="The Boiling Crab">The Boiling Crab</a>
+                <a href="#" class="place-link" data-name="Source">Source</a>
+                <a href="#" class="place-link" data-name="The Painted Burro">The Painted Burro</a>
+                <a href="#" class="place-link" data-name="Toscano">Toscano</a>
+            </div>
+        </div>
+
+        <!-- Study Spots -->
+        <div class="category">
+            <button class="cat-toggle">Study Spots</button>
+            <div class="cat-content">
+                <a href="#" class="place-link" data-name="Cabot Library">Cabot Library</a>
+                <a href="#" class="place-link" data-name="Widener Library">Widener Library</a>
+                <a href="#" class="place-link" data-name="Lamont Library">Lamont Library</a>
+                <a href="#" class="place-link" data-name="Smith Campus Center">Smith Campus Center</a>
+                <a href="#" class="place-link" data-name="Science and Engineering Complex (SEC)">Science and Engieering Complex (SEC)</a>
+                <a href="#" class="place-link" data-name="Kennedy School Library">Kennedy School Library</a>
+            </div>
+        </div>
+
+        <!-- Gyms -->
+        <div class="category">
+            <button class="cat-toggle">Gyms</button>
+            <div class="cat-content">
+                <a href="#" class="place-link" data-name="Malkin Athletic Center (MAC)">Malkin Athletic Center(MAC)</a>
+                <a href="#" class="place-link" data-name="Hemenway Gym">Hemenway</a>
+                <a href="#" class="place-link" data-name="Murr Center">Murr</a>
+                <a href="#" class="place-link" data-name="Quadrangle Recreational Athletic Center (QRAC)">Quadrangle Recreational Athletic Center(QRAC)</a>
+            </div>
+        </div>
+
+    </div>
+
+    <!--  MAP  -->
+    <div id="map"></div>
+
+    <!-- Search Bar over the map -->
+    <div class="search-box">
+        <input id="search" type="text" placeholder="Search location...">
+        <button onclick="searchLocation()">Go</button>
+    </div>
+
+    <script>
+        // INITIALIZE MAP
+        const map = L.map("map").setView([42.3733, -71.1190], 15); // Harvard Square-ish
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            maxZoom: 20,
+        }).addTo(map);
+
+
+        // LOCATIONS 
+        const locations = [
+            //  RESTAURANTS
+            { 
+                name: "Russell House Tavern", 
+                coords: [42.3733, -71.1200], 
+                category: "restaurant",
+                description: "Busy American tavern with great burgers and a solid late-night student vibe right off Harvard Square."
+            },
+            { 
+                name: "Grafton Street Pub & Grill", 
+                coords: [42.3730, -71.1185], 
+                category: "restaurant",
+                description: "Cozy pub-style restaurant good for brunch or dinner with visiting family."
+            },
+            { 
+                name: "Felipe's Taqueria", 
+                coords: [42.3727, -71.1193], 
+                category: "restaurant",
+                description: "Casual Mexican spot with a rooftop, perfect for quick meals with friends after class."
+            },
+            { 
+                name: "The Boiling Crab", 
+                coords: [42.3729, -71.1208], 
+                category: "restaurant",
+                description: "Seafood boil spot known for Cajun-style shrimp, crab, and crawfish. Fun, messy, and great for groups."
+            },
+            { 
+                name: "Source", 
+                coords: [42.3735, -71.1215], 
+                category: "restaurant",
+                description: "Trendy gastropub and pizzeria with wood-fired pizzas and craft beers, perfect for casual dinners."
+            },
+            { 
+                name: "The Painted Burro", 
+                coords: [42.3737, -71.1204], 
+                category: "restaurant",
+                description: "Colorful, upbeat Mexican restaurant offering tacos, margaritas, and Latin-style street food."
+            },
+            { 
+                name: "Toscano", 
+                coords: [42.3734, -71.1209], 
+                category: "restaurant",
+                description: "Elegant Italian restaurant known for pasta, fine wines, and a warm atmosphere—great for nice dinners."
+            },
+
+            // GYMS 
+            { 
+                name: "Malkin Athletic Center (MAC)", 
+                coords: [42.3722, -71.1168], 
+                category: "gym",
+                description: "Main undergrad gym with cardio machines, weights, and group fitness classes."
+            },
+            { 
+                name: "Hemenway Gym", 
+                coords: [42.3763, -71.1152], 
+                category: "gym",
+                description: "Popular gym for grad and law students with plenty of equipment and squash courts."
+            },
+            { 
+                name: "Murr Center", 
+                coords: [42.3693, -71.1186], 
+                category: "gym",
+                description: "Athletics facility near the stadium area, often used by varsity teams."
+            },
+            { 
+                name: "Quadrangle Recreational Athletic Center (QRAC)", 
+                coords: [42.3822, -71.1265], 
+                category: "gym",
+                description: "Gym up by the Quad, convenient for students in Cabot, Currier, and Pfoho."
+            },
+
+            // COFFEE SHOPS (rough coords, placeholders)
+            { 
+                name: "Tatte Bakery & Cafe", 
+                coords: [42.3738, -71.1202], 
+                category: "coffee",
+                description: "Popular bakery and cafe with pastries and coffee, a classic Harvard Square study and hangout spot."
+            },
+            { 
+                name: "Daily Provisions", 
+                coords: [42.3736, -71.1198], 
+                category: "coffee",
+                description: "Casual cafe-style spot for coffee, small bites, and quick breakfasts."
+            },
+            { 
+                name: "Blank Street Coffee", 
+                coords: [42.3740, -71.1195], 
+                category: "coffee",
+                description: "Minimalist coffee shop known for consistent espresso and grab-and-go drinks."
+            },
+            { 
+                name: "Life Alive Organic Cafe", 
+                coords: [42.3739, -71.1210], 
+                category: "coffee",
+                description: "Cozy, health-focused spot with smoothies, bowls, and warm drinks—great for a more relaxed vibe."
+            },
+            { 
+                name: "Flour Bakery & Cafe", 
+                coords: [42.3741, -71.1189], 
+                category: "coffee",
+                description: "Beloved bakery chain with excellent pastries and lunch options, busy during peak hours."
+            },
+            { 
+                name: "Cafe Gato Rojo", 
+                coords: [42.3731, -71.1189], 
+                category: "coffee",
+                description: "Student-run cafe in the basement of the Barker Center, cozy and very student-centered."
+            },
+            { 
+                name: "Clover Food Lab", 
+                coords: [42.3732, -71.1187], 
+                category: "coffee",
+                description: "Vegetarian-friendly spot with coffee, sandwiches, and a casual atmosphere."
+            },
+
+            // STUDY SPOTS (rough coords, placeholders) 
+            { 
+                name: "Cabot Library", 
+                coords: [42.3791, -71.1165], 
+                category: "study",
+                description: "STEM-focused library in the Science Center with lots of tables and natural light."
+            },
+            { 
+                name: "Widener Library", 
+                coords: [42.3735, -71.1167], 
+                category: "study",
+                description: "Iconic main library with quiet reading rooms and stacks—classic Harvard study spot."
+            },
+            { 
+                name: "Lamont Library", 
+                coords: [42.3728, -71.1160], 
+                category: "study",
+                description: "Undergrad-friendly library with group study spaces and a more relaxed atmosphere."
+            },
+            { 
+                name: "Smith Campus Center", 
+                coords: [42.3730, -71.1182], 
+                category: "study",
+                description: "Central hub with lots of seating, food options, and a busy student vibe."
+            },
+            { 
+                name: "Science and Engineering Complex (SEC)", 
+                coords: [42.3634, -71.1280], 
+                category: "study",
+                description: "Modern building in Allston with open study spaces for engineering and applied science students."
+            },
+            { 
+                name: "Kennedy School Library", 
+                coords: [42.3716, -71.1214], 
+                category: "study",
+                description: "Policy-focused library used by HKS students, quieter and a bit removed from the main yard."
+            }
+        ];
+
+        // 3. ADD MARKERS + POPUPS
+        const markersByName = {};
+
+        locations.forEach(loc => {
+            const marker = L.marker(loc.coords)
+                .addTo(map)
+                .bindPopup(`
+                    <div class="popup-content">
+                        <h3>${loc.name}</h3>
+                        <p><strong>Type:</strong> ${loc.category.toUpperCase()}</p>
+                        <p>${loc.description}</p>
+                    </div>
+                `);
+
+            markersByName[loc.name] = marker;
+        });
+
+        // SEARCH
+        function searchLocation() {
+            const input = document.getElementById("search").value.toLowerCase();
+            const found = locations.find(l => l.name.toLowerCase().includes(input));
+
+            if (found) {
+                map.flyTo(found.coords, 17);
+                const m = markersByName[found.name];
+                if (m) m.openPopup();
+            }
+        }
+
+        // Make searchLocation available globally for the button onclick
+        window.searchLocation = searchLocation;
+
+        // SIDEBAR COLLAPSE / EXPAND
+        document.querySelectorAll(".cat-toggle").forEach(btn => {
+            btn.addEventListener("click", () => {
+                btn.nextElementSibling.classList.toggle("open");
+            });
+        });
+
+        // SIDEBAR CATEGORY SEARCH
+
+        function filterCategories() {
+            const value = document.getElementById("searchBar").value.toLowerCase();
+            const cats = document.querySelectorAll(".category");
+
+            cats.forEach(cat => {
+                const title = cat.querySelector(".cat-toggle").innerText.toLowerCase();
+                cat.style.display = title.includes(value) ? "block" : "none";
+            });
+        }
+        window.filterCategories = filterCategories;
+
+        // SIDEBAR LINKS → MAP FOCUS
+        document.querySelectorAll(".place-link").forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                const name = this.getAttribute("data-name") || this.textContent.trim();
+                focusOnLocation(name);
+            });
+        });
+
+        function focusOnLocation(name) {
+            const marker = markersByName[name];
+            if (marker) {
+                map.flyTo(marker.getLatLng(), 18);
+                marker.openPopup();
+            } else {
+                console.warn("No marker found for:", name);
+            }
+        }
+    </script>
+
+</body>
+</html>
