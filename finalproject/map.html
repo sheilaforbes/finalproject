@@ -28,61 +28,77 @@
     const locations = [
         { name: "Location A", coords: [40.7128, -74.0060], url: "a.html" },
         { name: "Location B", coords: [40.730610, -73.935242], url: "b.html" }
+        //RESTAURANTS
         { name: "Russell House Tavern",
             coords: [42.3733, -71.1200],
             category: "restaurant"
+            description: "Busy American tavern with great burgers and a solid late-night student vibe right off Harvard Square."
         },
         {
             name: "Grafton Street Pub & Grill",
             coords: [42.3730, -71.1185],
             category: "restaurant"
+            description: "Cozy pub-style restaurant good for brunch or dinner with visiting family."
+            
         },
         {
             name: "Felipe's Taqueria",
             coords: [42.3727, -71.1193],
             category: "restaurant"
+            description: "Casual Mexican spot with a rooftop, perfect for quick meals with friends after class."
         },
         {
             name: "The Boiling Crab",
             coords: [42.3729, -71.1208],
             category: "restaurant"
+            description: "Seafood boil spot known for Cajun-style shrimp, crab, and crawfish. Fun, messy, and perfect for big groups looking for a lively dining experience."
+            
         },
         {
             name: "Source",
             coords: [42.3735, -71.1215],
             category: "restaurant"
+            description: "Trendy gastropub and pizzeria with wood-fired pizzas, craft beers, and a modern Harvard Square vibe. Great for casual dinners or nights out with friends."
         },
         {
             name: "The Painted Burro",
             coords: [42.3737, -71.1204],
             category: "restaurant"
+            description: "Colorful, upbeat Mexican restaurant offering tacos, margaritas, and Latin-style street food. Popular for weekend brunch and group dinners."
         },
         {
             name: "Toscano",
             coords: [42.3734, -71.1209],
             category: "restaurant"
+            description: "Elegant Italian restaurant known for pasta, fine wines, and a warm atmosphere. A go-to spot when parents visit or for more formal dinners."
         },
 
-        // ==== GYMS ====
+        // GYMS
         {
             name: "Malkin Athletic Center (MAC)",
             coords: [42.3722, -71.1168],
             category: "gym"
+            description: "Main undergrad gym with cardio machines, weights, and group fitness classes."
+            
         },
         {
             name: "Hemenway Gym",
             coords: [42.3763, -71.1152],
             category: "gym"
+            description: "Popular gym for grad students and law students with plenty of equipment and squash courts."
+            
         },
         {
             name: "Murr Center",
             coords: [42.3693, -71.1186],
             category: "gym"
+            description: "Athletics facility near the stadium area, often used by varsity teams."
         },
         {
             name: "Quadrangle Recreational Athletic Center (QRAC)",
             coords: [42.3822, -71.1265],
             category: "gym"
+            description: "Gym up by the Quad, convenient for students living in Cabot, Currier, and Pfoho."
         },
     ];
 
@@ -91,7 +107,11 @@
     locations.forEach(loc => { 
         const marker = L.marker(loc.coords)
             .addTo(map)
-            .bindPopup(`<b>${loc.name}</b><br>${loc.category.toUpperCase()}`);
+            .bindPopup(<div class="popup-content">
+            <h3>${loc.name}</h3>
+            <p><strong>Type:</strong> ${loc.category.toUpperCase()}</p>
+            <p>${loc.description}</p>
+        </div>`);
         markersByName[loc.name] = marker;
     });
 
