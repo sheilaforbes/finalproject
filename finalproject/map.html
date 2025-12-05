@@ -28,22 +28,103 @@
     const locations = [
         { name: "Location A", coords: [40.7128, -74.0060], url: "a.html" },
         { name: "Location B", coords: [40.730610, -73.935242], url: "b.html" }
+        { name: "Russell House Tavern",
+            coords: [42.3733, -71.1200],
+            category: "restaurant"
+        },
+        {
+            name: "Grafton Street Pub & Grill",
+            coords: [42.3730, -71.1185],
+            category: "restaurant"
+        },
+        {
+            name: "Felipe's Taqueria",
+            coords: [42.3727, -71.1193],
+            category: "restaurant"
+        },
+        {
+            name: "The Boiling Crab",
+            coords: [42.3729, -71.1208],
+            category: "restaurant"
+        },
+        {
+            name: "Source",
+            coords: [42.3735, -71.1215],
+            category: "restaurant"
+        },
+        {
+            name: "The Painted Burro",
+            coords: [42.3737, -71.1204],
+            category: "restaurant"
+        },
+        {
+            name: "Toscano",
+            coords: [42.3734, -71.1209],
+            category: "restaurant"
+        },
+
+        // ==== GYMS ====
+        {
+            name: "Malkin Athletic Center (MAC)",
+            coords: [42.3722, -71.1168],
+            category: "gym"
+        },
+        {
+            name: "Hemenway Gym",
+            coords: [42.3763, -71.1152],
+            category: "gym"
+        },
+        {
+            name: "Murr Center",
+            coords: [42.3693, -71.1186],
+            category: "gym"
+        },
+        {
+            name: "Quadrangle Recreational Athletic Center (QRAC)",
+            coords: [42.3822, -71.1265],
+            category: "gym"
+        },
     ];
 
+    
     // Add markers
-    locations.forEach(loc => {
-        L.marker(loc.coords)
+    locations.forEach(loc => { 
+        const marker = L.marker(loc.coords)
             .addTo(map)
-            .bindPopup(`<b>${loc.name}</b><br><a href="${loc.url}">More info</a>`);
+            .bindPopup(`<b>${loc.name}</b><br>${loc.category.toUpperCase()}`);
+        markersByName[loc.name] = marker;
     });
 
-    // SEARCH + ZOOM
+    //search and location
     function searchLocation() {
         const input = document.getElementById("search").value.toLowerCase();
         const found = locations.find(l => l.name.toLowerCase().includes(input));
 
         if (found) {
             map.flyTo(found.coords, 14);
+        }
+    }
+    //sidebar 
+    document.addEventListener("DOMContentLoaded", () => {
+        const links = document.querySelectorAll(".place-link");
+
+        links.forEach(link => {
+            link.addEventListener("click", function (e) {
+                e.preventDefault();
+                // Prefer data-name; if missing, fall back to the text
+                const name = this.getAttribute("data-name") || this.textContent.trim();
+                focusOnLocation(name);
+            });
+        });
+    });
+
+    function focusOnLocation(name) {
+        const marker = markersByName[name];
+        if (marker) {
+            map.flyTo(marker.getLatLng(), 18);
+            marker.openPopup();
+        } else {
+            console.warn("No marker found for:", name);
         }
     }
 </script>
