@@ -55,6 +55,9 @@
                     return;
                 }
 
+                localStorage.setItem("harvardEmail", email);
+                localStorage.setItem("harvardPassword", password);
+
                 successMsg.textContent = "Accountsuccessfully created!";
             });
         </script>
